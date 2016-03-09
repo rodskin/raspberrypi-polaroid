@@ -12,9 +12,9 @@ pygame.init()
 
 # set up the pins
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(24,GPIO.IN) # PIN 18
-GPIO.setup(23,GPIO.OUT) # PIN 16
-GPIO.setup(18,GPIO.IN) # PIN 12
+GPIO.setup(24,GPIO.IN)
+GPIO.setup(23,GPIO.OUT)
+GPIO.setup(18,GPIO.IN)
 # setup variables
 count = 0
 up = False
@@ -42,10 +42,13 @@ while(True):
                         print("request received" + timeString)
                         filename = "photos/photo-" + timeString + ".jpg"
                         takepic(filename)
+                        # On envoie sur la Dropbox
+                        from subprocess import call  
+                        photofile = "/home/pi/Dropbox-Uploader/dropbox_uploader.sh upload /home/pi/" + filename + " " + filename
+                        call ([photofile], shell=True)
                 if(GPIO.input(18)==False):
                         command_shut = "sudo halt"
                         print(command_shut)
-                        # decommenter pour eteindre ou cabler 18 a + 5V avec resistance 10K
                         # os.system(command_shut)
         up = GPIO.input(24)
         count = count +1
