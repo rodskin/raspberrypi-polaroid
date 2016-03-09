@@ -8,7 +8,9 @@ import RPi.GPIO as GPIO
 import subprocess
 import datetime
 import pygame
+import urllib2
 pygame.init()
+
 
 # set up the pins
 GPIO.setmode(GPIO.BCM)
@@ -27,10 +29,17 @@ index = 0
 camera_pause = "500"
 print "Raspberry Pi Camera with Buttons"
 def takepic(imageName):
-        print("click")
-        command = "sudo raspistill -o " + imageName + " -q 100 -t " + camera_pause
-        print(command)
-        os.system(command)
+    print("click")
+    command = "sudo raspistill -o " + imageName + " -q 100 -t " + camera_pause
+    # print(command)
+    os.system(command)
+#internet detection
+def internet_on():
+    try:
+        response=urllib2.urlopen('http://google.com',timeout=1)
+        return True
+    except urllib2.URLError as err: pass
+    return False
 while(True):
         GPIO.output(23,True)
         # for event in pygame.event.get():
