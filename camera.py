@@ -41,27 +41,28 @@ def internet_on():
     except urllib2.URLError as err: pass
     return False
 while(True):
-        GPIO.output(23,True)
-        # for event in pygame.event.get():
-        #       if event.type == pygame.QUIT: sys.exit()
-        if(up==True):
-                if(GPIO.input(24)==False):
-                        print "BUTTON DOWN PRESSED"
-                        now = datetime.datetime.now()
-                        timeString = now.strftime("%Y-%m-%d_%H:%M:%S")
-                        print("request received" + timeString)
-                        filename = "photo-" + timeString + ".jpg"
-                        takepic(dir_name + "/" + filename)
-                        # On envoie sur la Dropbox
-                        from subprocess import call  
-                        photofile = "/home/pi/Dropbox-Uploader/dropbox_uploader.sh upload " + dir_name + "/" + filename + " " + filename
-                        call ([photofile], shell=True)
-                if(GPIO.input(18)==False):
-                        command_shut = "sudo halt"
-                        print(command_shut)
-                        # os.system(command_shut)
-        up = GPIO.input(24)
-        count = count +1
-        sleep(.1)
+    GPIO.output(23,True)
+    # for event in pygame.event.get():
+    #     if event.type == pygame.QUIT: sys.exit()
+    if(up==True):
+        if(GPIO.input(24)==False):
+            print "BUTTON CAMERA PRESSED"
+            now = datetime.datetime.now()
+            timeString = now.strftime("%Y-%m-%d_%H:%M:%S")
+            print("request received" + timeString)
+            filename = "photo-" + timeString + ".jpg"
+            takepic(dir_name + "/" + filename)
+            # On envoie sur la Dropbox
+            from subprocess import call  
+            photofile = "/home/pi/Dropbox-Uploader/dropbox_uploader.sh upload " + dir_name + "/" + filename + " " + filename
+            call ([photofile], shell=True)
+        if(GPIO.input(18)==False):
+            GPIO.output(23,False)
+            command_shut = "sudo halt"
+            print(command_shut)
+            # os.system(command_shut)
+    up = GPIO.input(24)
+    count = count +1
+    sleep(.1)
 # this is never hit, but should be here to indicate if you plan on leaving the main loop
 print "done"
