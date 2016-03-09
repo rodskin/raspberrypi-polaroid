@@ -21,6 +21,7 @@ up = False
 down = False
 command = ""
 command_shut = ""
+dir_name = "photos"
 filename = ""
 index = 0
 camera_pause = "500"
@@ -40,11 +41,11 @@ while(True):
                         now = datetime.datetime.now()
                         timeString = now.strftime("%Y-%m-%d_%H:%M:%S")
                         print("request received" + timeString)
-                        filename = "photos/photo-" + timeString + ".jpg"
-                        takepic(filename)
+                        filename = "photo-" + timeString + ".jpg"
+                        takepic(dir_name + "/" + filename)
                         # On envoie sur la Dropbox
                         from subprocess import call  
-                        photofile = "/home/pi/Dropbox-Uploader/dropbox_uploader.sh upload /home/pi/" + filename + " " + filename
+                        photofile = "/home/pi/Dropbox-Uploader/dropbox_uploader.sh upload " + dir_name + "/" + filename + " " + filename
                         call ([photofile], shell=True)
                 if(GPIO.input(18)==False):
                         command_shut = "sudo halt"
