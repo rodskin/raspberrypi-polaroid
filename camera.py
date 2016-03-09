@@ -12,9 +12,9 @@ pygame.init()
 
 # set up the pins
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(24,GPIO.IN)
-GPIO.setup(23,GPIO.OUT)
-GPIO.setup(18,GPIO.IN)
+GPIO.setup(24,GPIO.IN) # PIN 18
+GPIO.setup(23,GPIO.OUT) # PIN 16
+GPIO.setup(18,GPIO.IN) # PIN 12
 # setup variables
 count = 0
 up = False
@@ -32,20 +32,21 @@ def takepic(imageName):
         os.system(command)
 while(True):
         GPIO.output(23,True)
-        for event in pygame.event.get():
-                        if event.type == pygame.QUIT: sys.exit()
+        # for event in pygame.event.get():
+        #       if event.type == pygame.QUIT: sys.exit()
         if(up==True):
                 if(GPIO.input(24)==False):
                         print "BUTTON DOWN PRESSED"
                         now = datetime.datetime.now()
                         timeString = now.strftime("%Y-%m-%d_%H:%M:%S")
                         print("request received" + timeString)
-                        filename = "polaroid/photos/photo-" + timeString + ".jpg"
+                        filename = "photos/photo-" + timeString + ".jpg"
                         takepic(filename)
                 if(GPIO.input(18)==False):
                         command_shut = "sudo halt"
                         print(command_shut)
-                        os.system(command_shut)
+                        # decommenter pour eteindre ou cabler 18 a + 5V avec resistance 10K
+                        # os.system(command_shut)
         up = GPIO.input(24)
         count = count +1
         sleep(.1)
