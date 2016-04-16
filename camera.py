@@ -10,6 +10,7 @@ import Image
 import datetime
 import pygame
 import urllib2
+import sys
 sys.path.append("/home/pi/Python-Thermal-Printer")
 from Adafruit_Thermal import *
 pygame.init()
