@@ -2,7 +2,7 @@
 # this file is run using this command: "sudo python camera.py"
 # python must be installed, and you must call the command while
 # you are in the same folder as the file
-from time import sleep
+#from time import sleep
 from __future__ import print_function
 import os
 import RPi.GPIO as GPIO
@@ -37,9 +37,11 @@ filename = ""
 index = 0
 camera_pause = "500"
 photoResize = 512, 384
-print "Raspberry Pi Camera with Buttons"
+#print "Raspberry Pi Camera with Buttons"
+sys.stdout.write('Raspberry Pi Camera with Buttons.')
 def takepic(imageName):
-    print("click")
+    sys.stdout.write("click")
+
     #command = "sudo raspistill -o " + imageName + " -q 100 -t " + camera_pause
     command = "sudo raspistill -p '144,48,512,384' --vflip -w 1920 -h 1440 -o " + imageName
     # print(command)
@@ -57,10 +59,10 @@ while(True):
     #     if event.type == pygame.QUIT: sys.exit()
     if(up==True):
         if(GPIO.input(24)==False):
-            print "BUTTON CAMERA PRESSED"
+            sys.stdout.write("BUTTON CAMERA PRESSED")
             now = datetime.datetime.now()
             timeString = now.strftime("%Y-%m-%d_%H:%M:%S")
-            print("request received" + timeString)
+            sys.stdout.write("request received" + timeString)
             filename = "photo-" + timeString + ".jpg"
             takepic(dir_name + "/" + filename)
             Image.open(dir_name + "/" + filename).resize(photoResize, Image.ANTIALIAS).save(dir_name + "/" + "thumbnail.jpg")
@@ -90,4 +92,4 @@ while(True):
     count = count +1
     sleep(.1)
 # this is never hit, but should be here to indicate if you plan on leaving the main loop
-print "done"
+sys.stdout.write("done")
