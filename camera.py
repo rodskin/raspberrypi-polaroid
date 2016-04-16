@@ -6,6 +6,7 @@ from time import sleep
 import os
 import RPi.GPIO as GPIO
 import subprocess
+import Image
 import datetime
 import pygame
 import urllib2
