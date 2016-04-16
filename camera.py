@@ -3,6 +3,7 @@
 # python must be installed, and you must call the command while
 # you are in the same folder as the file
 from time import sleep
+from __future__ import print_function
 import os
 import RPi.GPIO as GPIO
 import subprocess
