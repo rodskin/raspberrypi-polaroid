@@ -9,6 +9,7 @@ import RPi.GPIO as GPIO
 import subprocess
 import Image
 import datetime
+import time
 import pygame
 import urllib2
 import sys
