@@ -56,18 +56,18 @@ while(True):
             filename = "photo-" + timeString + ".jpg"
             takepic(dir_name + "/" + filename)
             Image.open(dir_name + "/" + filename).resize(photoResize, Image.ANTIALIAS).save(dir_name + "/" + "thumbnail.jpg")
-            Image.open(photoPath + "thumbnail.jpg").transpose(2).save(photoPath + "thumbnail-rotated.jpg")
+            Image.open(dir_name + "/" + "thumbnail.jpg").transpose(2).save(dir_name + "/" + "thumbnail-rotated.jpg")
             # Print the PHoto
             printer.begin(90) # Warmup time
             printer.setTimes(40000, 3000) # Set print and feed times
             printer.justify('C') # Center alignment
-            printer.printImage(Image.open(photoPath + "line-top.png"), True)
+            printer.printImage(Image.open(dir_name + "/" + "line-top.png"), True)
             printer.println(photoTitle)
-            printer.printImage(Image.open(photoPath + "line-bottom.png"), True)
+            printer.printImage(Image.open(dir_name + "/" + "line-bottom.png"), True)
             printer.feed(1) # Add a blank line
-            printer.printImage(Image.open(photoPath + "thumbnail-rotated.jpg"), True) # Specify image to print
+            printer.printImage(Image.open(dir_name + "/" + "thumbnail-rotated.jpg"), True) # Specify image to print
             printer.feed(1) # Add a blank line
-            printer.printImage(Image.open(photoPath + "qr-code.png"), True) # Specify image to print
+            #printer.printImage(Image.open(photoPath + "qr-code.png"), True) # Specify image to print
             printer.feed(3) # Add a few blank lines
             # On envoie sur la Dropbox
             #from subprocess import call  
