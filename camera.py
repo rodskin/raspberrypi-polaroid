@@ -10,7 +10,12 @@ import Image
 import datetime
 import pygame
 import urllib2
+sys.path.append("/home/pi/Python-Thermal-Printer")
+from Adafruit_Thermal import *
 pygame.init()
+
+# Define printer
+printer = Adafruit_Thermal("/dev/ttyAMA0", 19200, timeout=5)
 
 
 # set up the pins
