@@ -27,10 +27,12 @@ dir_name = "photos"
 filename = ""
 index = 0
 camera_pause = "500"
+photoResize = 512, 384
 print "Raspberry Pi Camera with Buttons"
 def takepic(imageName):
     print("click")
-    command = "sudo raspistill -o " + imageName + " -q 100 -t " + camera_pause
+    #command = "sudo raspistill -o " + imageName + " -q 100 -t " + camera_pause
+    command = "sudo raspistill -p '144,48,512,384' --vflip -w 1920 -h 1440 -o " + imageName
     # print(command)
     os.system(command)
 #internet detection
@@ -52,14 +54,28 @@ while(True):
             print("request received" + timeString)
             filename = "photo-" + timeString + ".jpg"
             takepic(dir_name + "/" + filename)
+            Image.open(dir_name + "/" + filename).resize(photoResize, Image.ANTIALIAS).save(dir_name + "/" + "thumbnail.jpg")
+            Image.open(photoPath + "thumbnail.jpg").transpose(2).save(photoPath + "thumbnail-rotated.jpg")
+            # Print the PHoto
+            printer.begin(90) # Warmup time
+            printer.setTimes(40000, 3000) # Set print and feed times
+            printer.justify('C') # Center alignment
+            printer.printImage(Image.open(photoPath + "line-top.png"), True)
+            printer.println(photoTitle)
+            printer.printImage(Image.open(photoPath + "line-bottom.png"), True)
+            printer.feed(1) # Add a blank line
+            printer.printImage(Image.open(photoPath + "thumbnail-rotated.jpg"), True) # Specify image to print
+            printer.feed(1) # Add a blank line
+            printer.printImage(Image.open(photoPath + "qr-code.png"), True) # Specify image to print
+            printer.feed(3) # Add a few blank lines
             # On envoie sur la Dropbox
-            from subprocess import call  
-            photofile = "/home/pi/Dropbox-Uploader/dropbox_uploader.sh upload " + dir_name + "/" + filename + " " + filename
-            call ([photofile], shell=True)
-        if(GPIO.input(18)==False):
-            GPIO.output(23,False)
-            command_shut = "sudo halt"
-            print(command_shut)
+            #from subprocess import call  
+            #photofile = "/home/pi/Dropbox-Uploader/dropbox_uploader.sh upload " + dir_name + "/" + filename + " " + filename
+            #call ([photofile], shell=True)
+        #if(GPIO.input(18)==False):
+        #    GPIO.output(23,False)
+        #    command_shut = "sudo halt"
+        #    print(command_shut)
             # os.system(command_shut)
     up = GPIO.input(24)
     count = count +1
