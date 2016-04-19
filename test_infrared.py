@@ -31,4 +31,4 @@ while(True):
       GPIO.output(25,False)
 
    sleep(.5)
-   infrared = !infrared
+   infrared = not infrared
