@@ -41,11 +41,13 @@ photoResize = 512, 384
 sys.stdout.write('Raspberry Pi Camera with Buttons.')
 def takepic(imageName):
     sys.stdout.write("click")
-
+    dir_name = "photos"
     #command = "sudo raspistill -o " + imageName + " -q 100 -t " + camera_pause
     command = "sudo raspistill -p '144,48,512,384' --vflip -w 1920 -h 1440 -o " + imageName
     # print(command)
     os.system(command)
+    Image.open(imageName).resize(photoResize, Image.ANTIALIAS).save(dir_name + "/" + "thumbnail.jpg")
+    Image.open(dir_name + "/" + "thumbnail.jpg").transpose(2).save(dir_name + "/" + "thumbnail-rotated.jpg")
 #internet detection
 def internet_on():
     try:
@@ -80,8 +82,7 @@ while(True):
             sys.stdout.write("request received" + timeString)
             filename = "photo-" + timeString + ".jpg"
             takepic(dir_name + "/" + filename)
-            Image.open(dir_name + "/" + filename).resize(photoResize, Image.ANTIALIAS).save(dir_name + "/" + "thumbnail.jpg")
-            Image.open(dir_name + "/" + "thumbnail.jpg").transpose(2).save(dir_name + "/" + "thumbnail-rotated.jpg")
+            
             #printPicture()
             # On envoie sur la Dropbox
             #from subprocess import call  
