@@ -24,6 +24,7 @@ GPIO.setup(25,GPIO.OUT)
 infrared = False
 
 while(True):
+   infrared = not infrared
    GPIO.output(25,infrared)
    if(GPIO.input(24)==True):
       GPIO.output(25,True)
@@ -31,4 +32,3 @@ while(True):
       GPIO.output(25,False)
 
    sleep(.5)
-   infrared = not infrared

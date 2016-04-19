@@ -2,8 +2,8 @@
 # this file is run using this command: "sudo python camera.py"
 # python must be installed, and you must call the command while
 # you are in the same folder as the file
-#from time import sleep
-from __future__ import print_function
+from time import sleep
+#from __future__ import print_function
 import os
 import RPi.GPIO as GPIO
 import subprocess
@@ -13,19 +13,19 @@ import time
 import pygame
 import urllib2
 import sys
-sys.path.append("/home/pi/Python-Thermal-Printer")
-from Adafruit_Thermal import *
+#sys.path.append("/home/pi/Python-Thermal-Printer")
+#from Adafruit_Thermal import *
 pygame.init()
 
 # Define printer
-printer = Adafruit_Thermal("/dev/ttyAMA0", 19200, timeout=5)
+#printer = Adafruit_Thermal("/dev/ttyAMA0", 19200, timeout=5)
 
 
 # set up the pins
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(24,GPIO.IN)
-GPIO.setup(23,GPIO.OUT)
-GPIO.setup(18,GPIO.IN)
+GPIO.setup(23,GPIO.OUT) #LED lorsque le programme est charge
+GPIO.setup(24,GPIO.IN) #bouton de prise de photo en passe bas
+GPIO.setup(18,GPIO.IN) #Eventuel bouton pour eteindre le pi
 # setup variables
 count = 0
 up = False
@@ -53,6 +53,21 @@ def internet_on():
         return True
     except urllib2.URLError as err: pass
     return False
+
+def printPicture():
+    # Print the Photo
+    printer.begin(90) # Warmup time
+    printer.setTimes(40000, 3000) # Set print and feed times
+    printer.justify('C') # Center alignment
+    printer.printImage(Image.open(dir_name + "/" + "line-top.png"), True)
+    printer.println(photoTitle)
+    printer.printImage(Image.open(dir_name + "/" + "line-bottom.png"), True)
+    printer.feed(1) # Add a blank line
+    printer.printImage(Image.open(dir_name + "/" + "thumbnail-rotated.jpg"), True) # Specify image to print
+    printer.feed(1) # Add a blank line
+    #printer.printImage(Image.open(photoPath + "qr-code.png"), True) # Specify image to print
+    printer.feed(3) # Add a few blank lines
+
 while(True):
     GPIO.output(23,True)
     # for event in pygame.event.get():
@@ -67,18 +82,7 @@ while(True):
             takepic(dir_name + "/" + filename)
             Image.open(dir_name + "/" + filename).resize(photoResize, Image.ANTIALIAS).save(dir_name + "/" + "thumbnail.jpg")
             Image.open(dir_name + "/" + "thumbnail.jpg").transpose(2).save(dir_name + "/" + "thumbnail-rotated.jpg")
-            # Print the PHoto
-            printer.begin(90) # Warmup time
-            printer.setTimes(40000, 3000) # Set print and feed times
-            printer.justify('C') # Center alignment
-            printer.printImage(Image.open(dir_name + "/" + "line-top.png"), True)
-            printer.println(photoTitle)
-            printer.printImage(Image.open(dir_name + "/" + "line-bottom.png"), True)
-            printer.feed(1) # Add a blank line
-            printer.printImage(Image.open(dir_name + "/" + "thumbnail-rotated.jpg"), True) # Specify image to print
-            printer.feed(1) # Add a blank line
-            #printer.printImage(Image.open(photoPath + "qr-code.png"), True) # Specify image to print
-            printer.feed(3) # Add a few blank lines
+            #printPicture()
             # On envoie sur la Dropbox
             #from subprocess import call  
             #photofile = "/home/pi/Dropbox-Uploader/dropbox_uploader.sh upload " + dir_name + "/" + filename + " " + filename
