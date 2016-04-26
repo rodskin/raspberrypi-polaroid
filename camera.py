@@ -69,32 +69,46 @@ def printPicture():
     printer.feed(1) # Add a blank line
     #printer.printImage(Image.open(photoPath + "qr-code.png"), True) # Specify image to print
     printer.feed(3) # Add a few blank lines
+try:
+    while(True):
+        GPIO.output(23,True)
+        # for event in pygame.event.get():
+        #     if event.type == pygame.QUIT: sys.exit()
+        if(up==True):
+            if(GPIO.input(24)==False):
+                sys.stdout.write("BUTTON CAMERA PRESSED")
+                now = datetime.datetime.now()
+                timeString = now.strftime("%Y-%m-%d_%H:%M:%S")
+                sys.stdout.write("request received" + timeString)
+                filename = "photo-" + timeString + ".jpg"
+                takepic(dir_name + "/" + filename)
+                
+                #printPicture()
+                # On envoie sur la Dropbox
+                #from subprocess import call  
+                #photofile = "/home/pi/Dropbox-Uploader/dropbox_uploader.sh upload " + dir_name + "/" + filename + " " + filename
+                #call ([photofile], shell=True)
+            #if(GPIO.input(18)==False):
+            #    GPIO.output(23,False)
+            #    command_shut = "sudo halt"
+            #    print(command_shut)
+                # os.system(command_shut)
+        up = GPIO.input(24)
+        count = count +1
+        sleep(.1)
+    # this is never hit, but should be here to indicate if you plan on leaving the main loop
+    sys.stdout.write("done")
 
-while(True):
-    GPIO.output(23,True)
-    # for event in pygame.event.get():
-    #     if event.type == pygame.QUIT: sys.exit()
-    if(up==True):
-        if(GPIO.input(24)==False):
-            sys.stdout.write("BUTTON CAMERA PRESSED")
-            now = datetime.datetime.now()
-            timeString = now.strftime("%Y-%m-%d_%H:%M:%S")
-            sys.stdout.write("request received" + timeString)
-            filename = "photo-" + timeString + ".jpg"
-            takepic(dir_name + "/" + filename)
-            
-            #printPicture()
-            # On envoie sur la Dropbox
-            #from subprocess import call  
-            #photofile = "/home/pi/Dropbox-Uploader/dropbox_uploader.sh upload " + dir_name + "/" + filename + " " + filename
-            #call ([photofile], shell=True)
-        #if(GPIO.input(18)==False):
-        #    GPIO.output(23,False)
-        #    command_shut = "sudo halt"
-        #    print(command_shut)
-            # os.system(command_shut)
-    up = GPIO.input(24)
-    count = count +1
-    sleep(.1)
-# this is never hit, but should be here to indicate if you plan on leaving the main loop
-sys.stdout.write("done")
+except KeyboardInterrupt:  
+    # here you put any code you want to run before the program   
+    # exits when you press CTRL+C  
+    print "\n", 'CTRL+C' # print value of counter  
+  
+except:  
+    # this catches ALL other exceptions including errors.  
+    # You won't get any error messages for debugging  
+    # so only use it once your code is working  
+    print "Other error or exception occurred!"
+  
+finally:  
+    GPIO.cleanup() # this ensures a clean exit  
